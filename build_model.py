@@ -22,9 +22,9 @@ def convertTimestamp(df):
     df['Minute'] = df.Date.dt.minute
 
 def calcDelta(df):
-    df['dDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].diff().fillna(0)
-    df['dE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].diff().fillna(0)
-    df['dE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].diff().fillna(0)
+    df['deltaDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].transform(lambda x: x - x[0])
+    df['deltaE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].transform(lambda x: x - x[0])
+    df['deltaE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].transform(lambda x: x - x[0])
 
 def build(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y,
