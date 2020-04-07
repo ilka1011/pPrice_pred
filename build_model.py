@@ -50,7 +50,7 @@ data = data.drop(['Date','UUID'], axis = 1)
 data = data.sort_values(by = ['Year', 'Month', 'Day'])
 calcDelta(data)
 
-y = data.E10
+y = data.dE10
 print(y.head())
 X = data.drop(['Diesel','E5','E10','dDiesel','dE5','dE10'], axis = 1)
 build(X,y)
