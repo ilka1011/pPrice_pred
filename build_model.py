@@ -29,8 +29,8 @@ def calcDelta(df):
 def build(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                      test_size = 0.2,
-                                      random_state = 123
-                                    )
+                                      random_state = 0)
+                                      
     pipeline = make_pipeline(preprocessing.StandardScaler(), RandomForestRegressor(n_estimators = 200))
     hyperparameters = {'randomforestregressor__max_features' : ['auto', 'sqrt', 'log2'], 'randomforestregressor__min_samples_leaf' : [2,4,8],
                         'randomforestregressor__min_samples_split' : [2,5,10], 'randomforestregressor__max_depth' : [None, 5,3,1]}
@@ -50,7 +50,7 @@ data = data.drop(['Date','UUID'], axis = 1)
 data = data.sort_values(by = ['Year', 'Month', 'Day'])
 calcDelta(data)
 
-y = data.dE10
+y = data.E10
 print(y.head())
 X = data.drop(['Diesel','E5','E10','dDiesel','dE5','dE10'], axis = 1)
 build(X,y)
