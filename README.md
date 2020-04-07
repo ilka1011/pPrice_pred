@@ -4,9 +4,7 @@ predicts changes in prices
 
 ## ToDos
 
-### implement oil price data into model
-
-### calculate delta to first price of day
+add oil prices as feature for ml model
 
 
 
