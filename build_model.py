@@ -9,9 +9,10 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 import joblib
 
-def loadData(path):
-    df = pandas.read_csv(path, names = ['Date','UUID','Diesel','E5','E10'])
-    return df
+def loadData(path1, path2, pnames, onames):
+    df1 = pandas.read_csv(path1, names = pnames)
+    df2 = pandas.read_csv(path2, names = onames)
+    return df1, df2
 
 def convertTimestamp(df):
     df['Date'] = pandas.to_datetime(df.Date)
@@ -22,16 +23,21 @@ def convertTimestamp(df):
     df['Minute'] = df.Date.dt.minute
 
 def calcDelta(df):
+    df = df.set_index('Date')
+    df.sort_index(inplace = True)
     df['deltaDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].transform(lambda x: x - x[0])
     df['deltaE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].transform(lambda x: x - x[0])
     df['deltaE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].transform(lambda x: x - x[0])
+    df.reset_index(drop = True)
+    df = df.drop(['UUID','Year'], axis = 1)
+    return df
 
 def build(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                      test_size = 0.2,
                                       random_state = 0)
 
-    pipeline = make_pipeline(preprocessing.StandardScaler(), RandomForestRegressor(n_estimators = 200))
+    pipeline = make_pipeline(preprocessing.StandardScaler(), RandomForestRegressor(n_estimators = 120))
     hyperparameters = {'randomforestregressor__max_features' : ['auto', 'sqrt', 'log2'], 'randomforestregressor__min_samples_leaf' : [2,4,8],
                         'randomforestregressor__min_samples_split' : [2,5,10], 'randomforestregressor__max_depth' : [None, 5,3,1]}
 
@@ -44,13 +50,11 @@ def build(X,y):
     print(mean_squared_error(y_test, pred))
 
 data = pandas.DataFrame()
-data = loadData("prices.csv")
-convertTimestamp(data)
-data = data.drop(['Date','UUID'], axis = 1)
-data = data.sort_values(by = ['Year', 'Month', 'Day'])
-calcDelta(data)
-
-y = data.dE10
-print(y.head())
-X = data.drop(['Diesel','E5','E10','dDiesel','dE5','dE10'], axis = 1)
-build(X,y)
+[data, data2] = loadData("prices.csv", "oil_prices.csv", ['Date','UUID','Diesel','E5','E10'], ['Date', 'Price'])
+#convertTimestamp(data)
+#data = calcDelta(data)
+#y = data.deltaE10
+#print(y.head())
+#X = data.drop(['Diesel','E5','E10','deltaDiesel','deltaE5','deltaE10'], axis = 1)
+#build(X,y)
+print(data2.describe())
