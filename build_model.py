@@ -28,9 +28,19 @@ def calcDelta(df):
     df['deltaDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].transform(lambda x: x - x[0])
     df['deltaE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].transform(lambda x: x - x[0])
     df['deltaE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].transform(lambda x: x - x[0])
-    df.reset_index(drop = True)
-    df = df.drop(['UUID','Year'], axis = 1)
+    df.reset_index(drop = False)
+    df = df.drop(['UUID'], axis = 1)
     return df
+
+def addData(df1, df2):
+    df1 = df1.set_index(['Year', 'Month', 'Day'])
+    df2 = df2.set_index(['Year', 'Month', 'Day'])
+    df1.sort_index(inplace = True)
+    df2.sort_index(inplace = True)
+    df1['Oil'] = df2.groupby('Date')['Price'].transform(lambda x: x)
+    
+    return df1
+    
 
 def build(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y,
@@ -51,10 +61,19 @@ def build(X,y):
 
 data = pandas.DataFrame()
 [data, data2] = loadData("prices.csv", "oil_prices.csv", ['Date','UUID','Diesel','E5','E10'], ['Date', 'Price'])
-#convertTimestamp(data)
-#data = calcDelta(data)
-#y = data.deltaE10
+convertTimestamp(data)
+convertTimestamp(data2)
+data = calcDelta(data)
+data.reset_index(drop = False)
+data = addData(data, data2)
+data.reset_index(drop = False)
+print(data.shape)
+data = data.dropna(axis = 0)
+print(data.shape)
+
+y = data.deltaE10
 #print(y.head())
-#X = data.drop(['Diesel','E5','E10','deltaDiesel','deltaE5','deltaE10'], axis = 1)
+X = data.drop(['Year','Diesel','E5','E10','deltaDiesel','deltaE5','deltaE10'], axis = 1)
+print(X.head())
+print(data.head())
 #build(X,y)
-print(data2.describe())
