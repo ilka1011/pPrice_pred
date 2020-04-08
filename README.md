@@ -1,14 +1,7 @@
-# Petrol price predictor
+# fuel price predictor
 
-predicts changes in prices 
-
-## ToDos
-
-### implement oil price data into model
-
-### calculate delta to first price of day
-
-
+attempt to predict changes in fuel prices for a petrol station.
+takes date and current oil prices in as features.
 
 ## Links
 
