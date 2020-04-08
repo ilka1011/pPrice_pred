@@ -10,4 +10,4 @@ data.set_index(['Year','Month','Day'], inplace = True)
 
 pred = clf.predict(data)
 print(pred)
-print(data.head())
+#print(data.head())

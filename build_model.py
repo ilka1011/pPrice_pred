@@ -25,9 +25,9 @@ def convertTimestamp(df):
 def calcDelta(df):
     df = df.set_index('Date')
     df.sort_index(inplace = True)
-    df['deltaDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].transform(lambda x: x - x[0])
-    df['deltaE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].transform(lambda x: x - x[0])
-    df['deltaE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].transform(lambda x: x - x[0])
+    df['deltaDiesel'] = df.groupby(['Year', 'Month', 'Day'])['Diesel'].transform(lambda x: (x - x[0])*10)
+    df['deltaE5'] = df.groupby(['Year', 'Month', 'Day'])['E5'].transform(lambda x: (x - x[0])*10)
+    df['deltaE10'] = df.groupby(['Year', 'Month', 'Day'])['E10'].transform(lambda x: (x - x[0])*10)
     df.reset_index(drop = False)
     df = df.drop(['UUID'], axis = 1)
     return df
@@ -37,7 +37,7 @@ def addData(df1, df2):
     df2 = df2.set_index(['Year', 'Month', 'Day'])
     df1.sort_index(inplace = True)
     df2.sort_index(inplace = True)
-    df1['Oil'] = df2.groupby('Date')['Price'].transform(lambda x: x)
+    df1['Oil'] = df2.groupby('Date')['Price'].transform(lambda x: (x/10))
     
     return df1
     
