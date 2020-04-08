@@ -37,7 +37,7 @@ def addData(df1, df2):
     df2 = df2.set_index(['Year', 'Month', 'Day'])
     df1.sort_index(inplace = True)
     df2.sort_index(inplace = True)
-    df1['Oil'] = df2.groupby('Date')['Price'].transform(lambda x: (x/10))
+    df1['Oil'] = df2.groupby('Date')['Price'].transform(lambda x: (x/30))
     
     return df1
     
