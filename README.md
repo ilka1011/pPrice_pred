@@ -1,12 +1,8 @@
-# Petrol price predictor
-
-predicts changes in prices 
-
-## ToDos
-
-add oil prices as feature for ml model
+# fuel price predictor
 
 
+attempt to predict changes in fuel prices for a petrol station.
+takes date and current oil prices in as features.
 
 ## Links
 
